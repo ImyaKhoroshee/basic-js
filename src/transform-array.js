@@ -13,9 +13,37 @@ const { NotImplementedError } = require('../extensions/index.js');
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  * 
  */
-function transform(/* arr */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+
+function transform(arr) {
+  const array = [];
+  const controlStructures = ['--double-next', '--discard-prev', '--double-prev', '--discard-next'];
+
+  if (arr instanceof Array) {
+    arr.forEach(element => {
+      if (!controlStructures.includes(element)) { array.push(element); }
+
+      else if (element === '--double-next') {
+        const elementToDouble = arr[arr.indexOf(element) + 1];
+        (!elementToDouble) ? array.push('') : array.push(elementToDouble);
+      }
+
+      else if (element === '--discard-prev') {
+        if (arr.indexOf(element) !== 0) { array.pop(); }
+      }
+
+      else if (element === '--double-prev') {
+        const elementToDouble = array[array.length - 1];
+        (!elementToDouble) ? array.push('') : array.push(elementToDouble);
+      }
+
+      else if (element === '--discard-next') {
+        arr[arr.indexOf(element) + 1] = '';
+        arr[arr.indexOf(element)] = '';
+        array.push('');
+      }
+    });
+    return array.filter(value => value !== '');
+  } else throw new Error("'arr' parameter must be an instance of the Array!");
 }
 
 module.exports = {
