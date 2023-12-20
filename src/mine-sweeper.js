@@ -23,9 +23,42 @@ const { NotImplementedError } = require('../extensions/index.js');
  *  [1, 1, 1]
  * ]
  */
-function minesweeper(/* matrix */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+function minesweeper(matrix) {
+  const result = [];
+
+  for (let rows = 0; rows < matrix.length; rows += 1) {
+    result[rows] = [];
+
+    for (let cols = 0; cols < matrix[0].length; cols += 1) {
+      let bombs = 0;
+
+      // [rows-1][cols-1] | [rows-1][cols] | [rows-1][cols+1]
+      // -----------------------------------------------------
+      //                        target
+      //  [rows][cols-1]  |  [rows][cols]  |  [rows][cols+1]
+      // -----------------------------------------------------
+      // [rows+1][cols-1] | [rows+1][cols] | [rows+1][cols+1]
+
+      // Always exists
+      if (matrix[rows][cols - 1]) { bombs += 1 };
+      if (matrix[rows][cols + 1]) { bombs += 1 };
+
+      // Check if row > 0
+      if (matrix[rows - 1]) {
+        if (matrix[rows - 1][cols - 1] && matrix[rows - 1][cols - 1] === true) { bombs += 1 };
+        if (matrix[rows - 1][cols] && matrix[rows - 1][cols] === true) { bombs += 1 };
+        if (matrix[rows - 1][cols + 1] && matrix[rows - 1][cols + 1] === true) { bombs += 1 };
+      }
+      // Check if row < 3
+      if ((matrix[rows + 1])) {
+        if (matrix[rows + 1][cols - 1] && matrix[rows + 1][cols - 1] === true) { bombs += 1 };
+        if (matrix[rows + 1][cols] && matrix[rows + 1][cols] === true) { bombs += 1 };
+        if (matrix[rows + 1][cols + 1] && matrix[rows + 1][cols + 1] === true) { bombs += 1 };
+      }
+      result[rows][cols] = bombs;
+    }
+  }
+  return result;
 }
 
 module.exports = {
