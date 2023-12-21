@@ -20,34 +20,26 @@ const { NotImplementedError } = require('../extensions/index.js');
  */
 function repeater(str, options) {
 
+  // Prepare parameters suitable to make the result string
   const separator = (!options.separator) ? '+' : options.separator;
   const additionSeparator = (!options.additionSeparator) ? '|' : options.additionSeparator;
+  const repeatTimes = (!options.repeatTimes) ? 1 : options.repeatTimes;
+  const additionRepeatTimes = (!options.additionRepeatTimes) ? 1 : options.additionRepeatTimes;
+  const addition = (options.addition || options.addition === false || options.addition === null) ? String(options.addition) : '';
 
-  if (!options.additionRepeatTimes && !options.repeatTimes && options.addition) return `${String(str)}${String(options.addition)}`;
+  // Make inner sequence
+  let innerSequence = `${addition}${additionSeparator}`.repeat(additionRepeatTimes);
+  innerSequence = innerSequence.slice(0, innerSequence.length - additionSeparator.length);
 
-  if (!options.additionRepeatTimes && !options.repeatTimes && !options.addition) return String(str);
+  // Make result string
+  let outsideSequence = `${String(str)}${innerSequence}${separator}`.repeat(repeatTimes);
+  outsideSequence = outsideSequence.slice(0, outsideSequence.length - separator.length);
 
-
-  if (!options.additionRepeatTimes) {
-    let sequence = `${String(str)}${separator}`.repeat(options.repeatTimes)
-    return sequence.slice(0, sequence.length - separator.length);
-  }
-  // if (options.repeatTimes && options.additionRepeatTimes && options.addition && options.separator) {
-  //   let sequence = `${options.addition}`.repeat(options.additionRepeatTimes);
-  //   sequence = `${String(str)}${sequence}${options.separator}`.repeat(options.repeatTimes)
-  //   return sequence.slice(0, sequence.length - separator.length);
-  // }
-  if (options.repeatTimes && options.separator && options.addition && options.additionRepeatTimes && options.additionSeparator) {
-    let innerSequence = `${String(options.addition)}${additionSeparator}`.repeat(options.additionRepeatTimes);
-    innerSequence = innerSequence.slice(0, innerSequence.length - additionSeparator.length);
-
-    let outsideSequence = `${String(str)}${innerSequence}${separator}`.repeat(options.repeatTimes);
-    outsideSequence = outsideSequence.slice(0, outsideSequence.length - separator.length);
-
-    return outsideSequence;
-  }
+  return outsideSequence;
 }
 
 module.exports = {
   repeater
 };
+
+
